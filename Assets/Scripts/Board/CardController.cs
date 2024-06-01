@@ -12,7 +12,6 @@ public class CardController : MonoBehaviour
     public void SetType(CardType cardType)
     {
         CardRenderer = GetComponent<SpriteRenderer>();
-        Debug.Log($"Sprites/{cardType}");
-        CardRenderer.sprite = Resources.Load<CardSpriteContainer>($"Sprites/{cardType}").GetSprite();
+        CardRenderer.sprite = ResourcesManager.GetCardSprite(cardType).GetSprite();
     }
 }

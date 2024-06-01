@@ -6,10 +6,14 @@ public class BoardGenerator : MonoBehaviour
     [SerializeField] private Vector2 CardSpacing = new (1.0f, 1.0f);
 
     private CardPrefabContainer CardObject;
+    private Transform Parent;
+    private Camera MainCamera;
     
     private void Start()
     {
-        CardObject = Resources.Load<CardPrefabContainer>("Prefabs/CardPrefab");
+        CardObject = ResourcesManager.GetCardPrefab();
+        Parent = transform;
+        MainCamera = Camera.main;
         
         GenerateGrid();
     }
@@ -30,7 +34,7 @@ public class BoardGenerator : MonoBehaviour
         };
 
         Vector2 offset = (gridSize - gridSpacing) * 0.5f;
-        Vector3 screenSize = Camera.main.ScreenToWorldPoint(new Vector2(Screen.width, Screen.height)) * 2f;
+        Vector3 screenSize = MainCamera.ScreenToWorldPoint(new Vector2(Screen.width, Screen.height)) * 2f;
 
         float scale = Mathf.Min(screenSize.x / gridSize.x, screenSize.y / gridSize.y);
         
@@ -38,14 +42,18 @@ public class BoardGenerator : MonoBehaviour
         {
             for (int x = 0; x < GridDimentions.x; x++)
             {
-                Vector3 position = (new Vector2(x * gridSpacing.x, y * gridSpacing.y) - offset) * scale;
-
-                CardController newCard = Instantiate(CardObject.GetCard(), position, Quaternion.identity, transform);
-                newCard.SetType((CardType)Random.Range(0, 9));
-                newCard.transform.localScale = Vector3.one * scale;
-                
-                newCard.name = $"Sprite_{x}_{y}";
+                Vector3 position = (Vector3)(new Vector2(x * gridSpacing.x, y * gridSpacing.y) - offset) * scale;
+                AddNewCard(position, Vector3.one * scale, $"Sprite_{x}_{y}");
             }
         }
+    }
+
+    private void AddNewCard(Vector3 cardPosition, Vector3 cardScale, string cardName)
+    {
+        CardController newCard = Instantiate(CardObject.GetCard(), cardPosition, Quaternion.identity, Parent);
+        newCard.SetType((CardType)Random.Range(0, 9));
+        newCard.transform.localScale = cardScale;
+                
+        newCard.name = cardName;
     }
 }

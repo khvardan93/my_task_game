@@ -1,4 +1,7 @@
+using System;
+using System.Collections.Generic;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 public class BoardGenerator : MonoBehaviour
 {
@@ -8,7 +11,9 @@ public class BoardGenerator : MonoBehaviour
     private CardPrefabContainer CardObject;
     private Transform Parent;
     private Camera MainCamera;
-    
+
+    private Dictionary<string, CardController> Cards = new();
+
     private void Start()
     {
         CardObject = ResourcesManager.GetCardPrefab();
@@ -16,6 +21,13 @@ public class BoardGenerator : MonoBehaviour
         MainCamera = Camera.main;
         
         GenerateGrid();
+
+        EventManager.Instance.OnClickCard += OnClickCard;
+    }
+
+    private void OnDestroy()
+    {
+        EventManager.Instance.OnClickCard -= OnClickCard;
     }
 
     private void GenerateGrid()
@@ -51,9 +63,19 @@ public class BoardGenerator : MonoBehaviour
     private void AddNewCard(Vector3 cardPosition, Vector3 cardScale, string cardName)
     {
         CardController newCard = Instantiate(CardObject.GetCard(), cardPosition, Quaternion.identity, Parent);
-        newCard.SetType((CardType)Random.Range(0, 9));
+        newCard.InitCard((CardType)Random.Range(0, 9));
         newCard.transform.localScale = cardScale;
                 
         newCard.name = cardName;
+        
+        Cards.Add(cardName, newCard);
+    }
+
+    private void OnClickCard(string cardName)
+    {
+        if (Cards.TryGetValue(cardName, out CardController card))
+        {
+            card.OpenCard();
+        }
     }
 }

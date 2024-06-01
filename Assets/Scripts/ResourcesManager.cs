@@ -11,4 +11,9 @@ public class ResourcesManager
     {
         return Resources.Load<CardSpriteContainer>($"{Configs.CARD_SPRITE_PATH}/{cardType}");
     }
+    
+    public static CardSpriteContainer GetCardBackSprite(CardType cardType)
+    {
+        return Resources.Load<CardSpriteContainer>(Configs.CARD_BACK_SPRITE_PATH);
+    }
 }

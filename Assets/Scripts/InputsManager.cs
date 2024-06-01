@@ -20,7 +20,7 @@ public class InputsManager : MonoBehaviour
 
             if (hit.collider)
             {
-                SpriteRenderer clickedSprite = hit.collider.GetComponent<SpriteRenderer>();
+                EventManager.Instance.OnClickCard?.Invoke(hit.collider.name);
             }
         }
     }

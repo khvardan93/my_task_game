@@ -1,17 +1,24 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
 
 [RequireComponent(typeof(SpriteRenderer))]
 public class CardController : MonoBehaviour
 {
     private SpriteRenderer CardRenderer;
+    private Sprite CardSprite;
+    private Sprite BackSprite;
     
-    public void SetType(CardType cardType)
+    public void InitCard(CardType cardType)
     {
         CardRenderer = GetComponent<SpriteRenderer>();
-        CardRenderer.sprite = ResourcesManager.GetCardSprite(cardType).GetSprite();
+        
+        CardSprite = ResourcesManager.GetCardSprite(cardType).GetSprite();
+        BackSprite = ResourcesManager.GetCardBackSprite(cardType).GetSprite();
+
+        CardRenderer.sprite = BackSprite;
+    }
+
+    public void OpenCard()
+    {
+        CardRenderer.sprite = CardSprite;
     }
 }

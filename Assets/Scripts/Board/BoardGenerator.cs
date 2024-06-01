@@ -4,7 +4,7 @@ public class BoardGenerator : MonoBehaviour
 {
     [SerializeField] private GameObject SpritePrefab;
     [SerializeField] private Vector2Int GridDimentions = new (5, 5);
-    [SerializeField] private Vector2 CardSpacing = new (1.0f, 1.0f); 
+    [SerializeField] private Vector2 CardSpacing = new (1.0f, 1.0f);
 
     private void Start()
     {
@@ -27,18 +27,16 @@ public class BoardGenerator : MonoBehaviour
             y = GridDimentions.y * gridSpacing.y
         };
 
-        Vector2 offset = gridSize / 2f;
-        Vector2 screenSize = Camera.main.ScreenToWorldPoint(new Vector2(Screen.width, Screen.height)) * 2;
+        Vector2 offset = (gridSize - gridSpacing) * 0.5f;
+        Vector3 screenSize = Camera.main.ScreenToWorldPoint(new Vector2(Screen.width, Screen.height)) * 2;
 
-        float scaleX = screenSize.x / gridSize.x;
-        float scaleY = screenSize.y / gridSize.y;
-        float scale = Mathf.Min(scaleX, scaleY);
+        float scale = Mathf.Min(screenSize.x / gridSize.x, screenSize.y / gridSize.y);
         
         for (int y = 0; y < GridDimentions.y; y++)
         {
             for (int x = 0; x < GridDimentions.x; x++)
             {
-                Vector3 position = new Vector3(x * gridSpacing.x, y * gridSpacing.y, 0) * scale - (Vector3)offset  * scale;
+                Vector3 position = (new Vector2(x * gridSpacing.x, y * gridSpacing.y) - offset) * scale;
 
                 GameObject newSprite = Instantiate(SpritePrefab, position, Quaternion.identity, transform);
 

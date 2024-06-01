@@ -154,8 +154,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   SpritePrefab: {fileID: 2845826553307652329, guid: 0bd069b8cb4d5934cab857eb61237d1a, type: 3}
   GridDimentions: {x: 5, y: 5}
-  CardSpacing: {x: 3, y: 3}
-  test: 0.3
+  CardSpacing: {x: 5, y: 5}
 --- !u!4 &148073973
 Transform:
   m_ObjectHideFlags: 0

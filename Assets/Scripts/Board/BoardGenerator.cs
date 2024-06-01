@@ -2,19 +2,21 @@ using UnityEngine;
 
 public class BoardGenerator : MonoBehaviour
 {
-    [SerializeField] private GameObject SpritePrefab;
     [SerializeField] private Vector2Int GridDimentions = new (5, 5);
     [SerializeField] private Vector2 CardSpacing = new (1.0f, 1.0f);
 
+    private CardPrefabContainer CardObject;
+    
     private void Start()
     {
+        CardObject = Resources.Load<CardPrefabContainer>("Prefabs/CardPrefab");
+        
         GenerateGrid();
     }
 
     private void GenerateGrid()
     {
-        Vector2 spriteSize = SpritePrefab.GetComponent<SpriteRenderer>().bounds.size;
-
+        Vector2 spriteSize = CardObject.GetSpriteSize();
         Vector2 gridSpacing = new Vector2
         {
             x = CardSpacing.x * spriteSize.x,
@@ -28,7 +30,7 @@ public class BoardGenerator : MonoBehaviour
         };
 
         Vector2 offset = (gridSize - gridSpacing) * 0.5f;
-        Vector3 screenSize = Camera.main.ScreenToWorldPoint(new Vector2(Screen.width, Screen.height)) * 2;
+        Vector3 screenSize = Camera.main.ScreenToWorldPoint(new Vector2(Screen.width, Screen.height)) * 2f;
 
         float scale = Mathf.Min(screenSize.x / gridSize.x, screenSize.y / gridSize.y);
         
@@ -38,11 +40,11 @@ public class BoardGenerator : MonoBehaviour
             {
                 Vector3 position = (new Vector2(x * gridSpacing.x, y * gridSpacing.y) - offset) * scale;
 
-                GameObject newSprite = Instantiate(SpritePrefab, position, Quaternion.identity, transform);
-
-                newSprite.transform.localScale = Vector3.one * scale;
+                CardController newCard = Instantiate(CardObject.GetCard(), position, Quaternion.identity, transform);
+                newCard.SetType((CardType)Random.Range(0, 9));
+                newCard.transform.localScale = Vector3.one * scale;
                 
-                newSprite.name = $"Sprite_{x}_{y}";
+                newCard.name = $"Sprite_{x}_{y}";
             }
         }
     }

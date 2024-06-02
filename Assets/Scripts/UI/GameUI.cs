@@ -1,5 +1,4 @@
 using TMPro;
-using Unity.VisualScripting;
 using UnityEngine;
 
 public class GameUI : MonoBehaviour
@@ -24,7 +23,7 @@ public class GameUI : MonoBehaviour
         }
         else
         {
-            NoLevelPopup.SetActive(true);
+            ShowNoLevelLeft();
         }
         
         Core.Events.OnChangeScore += OnScoreChange;
@@ -32,6 +31,8 @@ public class GameUI : MonoBehaviour
 
         Core.Events.OnFinishLevel += FinishLevelPopup.ShowPopup;
         Core.Events.OnCombo += ComboAlert.ShowAlert;
+
+        Core.Events.OnNoLevelLeft += ShowNoLevelLeft;
     }
 
     private void OnDestroy()
@@ -41,6 +42,8 @@ public class GameUI : MonoBehaviour
         
         Core.Events.OnFinishLevel -= FinishLevelPopup.ShowPopup;
         Core.Events.OnCombo -= ComboAlert.ShowAlert;
+        
+        Core.Events.OnNoLevelLeft -= ShowNoLevelLeft;
     }
 
     private void OnScoreChange(int score)
@@ -51,5 +54,10 @@ public class GameUI : MonoBehaviour
     private void OnLevelChange(int level)
     {
         LevelText.SetText($"Level: {level + 1}");
+    }
+
+    private void ShowNoLevelLeft()
+    {
+        NoLevelPopup.SetActive(true);
     }
 }

@@ -19,4 +19,6 @@ public class EventManager
     public Action OnMatch;
     
     public Action OnMismatch;
+    
+    public Action OnNoLevelLeft;
 }

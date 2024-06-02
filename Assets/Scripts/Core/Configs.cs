@@ -28,6 +28,6 @@ public static class Configs
 
     #region UI
     public const float FINISH_POPUP_OPEN_DELAY = 0.5f;
-    public const float COMBO_ANIM_DURATION = 0.5f;
+    public const float COMBO_ANIM_DURATION = 0.75f;
     #endregion
 }

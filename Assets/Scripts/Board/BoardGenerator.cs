@@ -36,6 +36,12 @@ public class BoardGenerator : MonoBehaviour
 
     private void StartLevel()
     {
+        if(!Core.Resources.IsLevelLeft())
+        {
+            Core.Events.OnNoLevelLeft?.Invoke();
+            return;
+        }
+        
         LevelContainer = Core.Resources.GetLevel(Core.Data.CurrentLevel);
         
         GenerateTypeDictionary(LevelContainer.GetCardTypes());

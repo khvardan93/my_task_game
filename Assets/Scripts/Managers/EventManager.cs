@@ -13,4 +13,8 @@ public class EventManager
     public Action OnCombo;
 
     public Action<int> OnFinishLevel;
+    
+    public Action OnMatch;
+    
+    public Action OnMismatch;
 }

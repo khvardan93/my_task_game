@@ -5,6 +5,7 @@ using UnityEngine;
 public class CardController : MonoBehaviour
 {
     private SpriteRenderer CardRenderer;
+    private AudioSource AudioSource;
     private Sprite CardSprite;
     private Sprite BackSprite;
     private Action<CardController> OnDestroyAction;
@@ -28,6 +29,7 @@ public class CardController : MonoBehaviour
         OnDestroyAction = onDestroyAction;
         
         CardRenderer = GetComponent<SpriteRenderer>();
+        AudioSource = GetComponent<AudioSource>();
         CardSprite = Core.Resources.GetCardSprite(cardType).GetSprite();
         BackSprite = Core.Resources.GetCardBackSprite(cardType).GetSprite();
 
@@ -49,6 +51,8 @@ public class CardController : MonoBehaviour
         
         CardRenderer.sprite = CardSprite;
         Invoke(nameof(CloseCard), Configs.CARD_OPEN_DURATION);
+        
+        AudioSource.Play();
 
         return true;
     }

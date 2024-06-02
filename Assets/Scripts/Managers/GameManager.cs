@@ -62,22 +62,35 @@ public class GameManager
 
     private void CheckMatches(CardController card, string key)
     {
+        int openCardCount = 0;
+        bool isThereAnyMatch = false;
+        
         foreach (var item in GameCards)
         {
+            if(item.Value.CardState != CardState.Open)
+                continue;
+
+            openCardCount++;
+            
             if (
                 String.CompareOrdinal(item.Key, key) != 0 &&
-                item.Value.CardState == CardState.Open &&
                 item.Value.CardType == card.CardType)
             {
                 card.DestroyCard();
                 item.Value.DestroyCard();
 
                 DestroyedCardCount += 2;
-
+                Core.Events.OnMatch?.Invoke();
+                isThereAnyMatch = true;
                 CheckCombo();
             }
         }
 
+        if (!isThereAnyMatch && openCardCount >= 2)
+        {
+            Core.Events.OnMismatch?.Invoke();
+        }
+        
         if (DestroyedCardCount == GameCards.Count)
         {
             FinishLevel();

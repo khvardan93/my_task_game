@@ -21,7 +21,7 @@ public static class Configs
     public const float CARD_DESTROY_DURATION = 0.5f;
     public const float CARD_PREVIEW_DURATION = 0.75f;
 
-    public const float COMBO_INTERVAL = 1.0f;
+    public const float COMBO_INTERVAL = 0.5f;
     public const int REWARD_PER_COMBO = 2;
     #endregion
 

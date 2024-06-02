@@ -7,7 +7,7 @@ public class ComboAlert : MonoBehaviour
     public void ShowAlert()
     {
         gameObject.SetActive(true);
-        Invoke(nameof(HideAlert), Configs.COMBO_INTERVAL);
+        Invoke(nameof(HideAlert), Configs.COMBO_ANIM_DURATION);
     }
 
     public void HideAlert()

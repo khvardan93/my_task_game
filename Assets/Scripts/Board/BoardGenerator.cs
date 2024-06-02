@@ -5,19 +5,24 @@ using Random = UnityEngine.Random;
 
 public class BoardGenerator : MonoBehaviour
 {
+    [SerializeField] private Transform Parent;
+    
     private Vector2 CardSpacing = new(1.2f, 1.2f);
     private LevelContainer LevelContainer;
     private CardPrefabContainer CardObject;
-    private Transform Parent;
     private Camera MainCamera;
 
+    private CardPool CardPool;
+
     private Dictionary<CardType, int> TypeList = new();
+    
 
     private void Start()
     {
         CardObject = Core.Resources.GetCardPrefab();
-        Parent = transform;
         MainCamera = Camera.main;
+
+        CardPool = new(CardObject.GetCard(), 10, Parent);
 
         Core.Events.OnStartLevel += StartLevel;
     }
@@ -77,12 +82,9 @@ public class BoardGenerator : MonoBehaviour
 
     private void AddNewCard(Vector3 cardPosition, Vector3 cardScale, string cardName)
     {
-        CardController newCard = Instantiate(CardObject.GetCard(), cardPosition, Quaternion.identity, Parent);
-
-        CardType randomType = GetRandomCardType();
+        CardController newCard = CardPool.Spawn(cardPosition, Quaternion.identity, cardScale);
         
-        newCard.InitCard(randomType);
-        newCard.transform.localScale = cardScale;
+        newCard.InitCard(GetRandomCardType(), CardPool.Despawn);
 
         newCard.name = cardName;
 

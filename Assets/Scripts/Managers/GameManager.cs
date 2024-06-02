@@ -5,6 +5,8 @@ public class GameManager
 {
     private Dictionary<string, CardController> GameCards = new();
 
+    private int DestroyedCardCount = 0;
+    
     public GameManager()
     {
         Core.Events.OnClickCard += OnClickCard;
@@ -15,6 +17,12 @@ public class GameManager
         Core.Events.OnClickCard -= OnClickCard;
     }
 
+    private void ResetGame()
+    {
+        GameCards.Clear();
+        DestroyedCardCount = 0;
+    }
+    
     public void RegisterCard(string cardName, CardController card)
     {
         GameCards.Add(cardName, card);
@@ -49,7 +57,14 @@ public class GameManager
             {
                 card.DestroyCard();
                 item.Value.DestroyCard();
+
+                DestroyedCardCount += 2;
             }
+        }
+
+        if (DestroyedCardCount == GameCards.Count)
+        {
+            ResetGame();
         }
     }
 }

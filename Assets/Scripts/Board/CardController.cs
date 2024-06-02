@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 [RequireComponent(typeof(SpriteRenderer))]
@@ -6,6 +7,7 @@ public class CardController : MonoBehaviour
     private SpriteRenderer CardRenderer;
     private Sprite CardSprite;
     private Sprite BackSprite;
+    private Action<CardController> OnDestroyAction;
 
     public CardState CardState
     {
@@ -19,8 +21,10 @@ public class CardController : MonoBehaviour
         get;
     }
     
-    public void InitCard(CardType cardType)
+    public void InitCard(CardType cardType, Action<CardController> onDestroyAction)
     {
+        OnDestroyAction = onDestroyAction;
+        
         CardRenderer = GetComponent<SpriteRenderer>();
         CardSprite = Core.Resources.GetCardSprite(cardType).GetSprite();
         BackSprite = Core.Resources.GetCardBackSprite(cardType).GetSprite();
@@ -61,6 +65,7 @@ public class CardController : MonoBehaviour
 
     private void DisableCard()
     {
+        OnDestroyAction?.Invoke(this);
         gameObject.SetActive(false);
     }
 }

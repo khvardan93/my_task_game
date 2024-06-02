@@ -1,5 +1,3 @@
-using System;
-using System.Collections.Generic;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -12,22 +10,13 @@ public class BoardGenerator : MonoBehaviour
     private Transform Parent;
     private Camera MainCamera;
 
-    private Dictionary<string, CardController> Cards = new();
-
     private void Start()
     {
-        CardObject = ResourcesManager.GetCardPrefab();
+        CardObject = Core.Resources.GetCardPrefab();
         Parent = transform;
         MainCamera = Camera.main;
         
         GenerateGrid();
-
-        EventManager.Instance.OnClickCard += OnClickCard;
-    }
-
-    private void OnDestroy()
-    {
-        EventManager.Instance.OnClickCard -= OnClickCard;
     }
 
     private void GenerateGrid()
@@ -68,14 +57,6 @@ public class BoardGenerator : MonoBehaviour
                 
         newCard.name = cardName;
         
-        Cards.Add(cardName, newCard);
-    }
-
-    private void OnClickCard(string cardName)
-    {
-        if (Cards.TryGetValue(cardName, out CardController card))
-        {
-            card.OpenCard();
-        }
+        Core.Game.RegisterCard(cardName, newCard);
     }
 }

@@ -20,7 +20,7 @@ public class InputsManager : MonoBehaviour
 
             if (hit.collider)
             {
-                EventManager.Instance.OnClickCard?.Invoke(hit.collider.name);
+                Core.Events.OnClickCard?.Invoke(hit.collider.name);
             }
         }
     }

@@ -9,4 +9,13 @@ public static class Configs
     #region LAYERS
     public const string CARD_LAYER = "Card";
     #endregion
+
+    #region DATA KEYS
+    public const string SCORE_DATA_KEY = "score";
+    public const string CURRENT_LEVEL_DATA_KEY = "current_level";
+    #endregion
+
+    #region GAME SETTINGS
+    public const float CARD_OPEN_DURATION = 1.0f;
+    #endregion
 }

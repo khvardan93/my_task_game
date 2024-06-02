@@ -13,6 +13,7 @@ public enum CardType
 
 public enum CardState
 {
+    Preview,
     Closed,
     Open,
     Destroyed

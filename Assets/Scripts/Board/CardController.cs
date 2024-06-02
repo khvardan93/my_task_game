@@ -25,9 +25,12 @@ public class CardController : MonoBehaviour
         CardSprite = Core.Resources.GetCardSprite(cardType).GetSprite();
         BackSprite = Core.Resources.GetCardBackSprite(cardType).GetSprite();
 
-        CardRenderer.sprite = BackSprite;
+        CardRenderer.sprite = CardSprite;
 
         CardType = cardType;
+
+        CardState = CardState.Preview;
+        Invoke(nameof(CloseCard), Configs.CARD_PREVIEW_DURATION);
     }
 
     public bool TryOpenCard()

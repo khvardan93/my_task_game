@@ -25,11 +25,13 @@ public class BoardGenerator : MonoBehaviour
         CardPool = new(CardObject.GetCard(), 10, Parent);
 
         Core.Events.OnStartLevel += StartLevel;
+        Core.Events.OnStartSavedLevel += StartLevel;
     }
 
     private void OnDestroy()
     {
         Core.Events.OnStartLevel -= StartLevel;
+        Core.Events.OnStartSavedLevel -= StartLevel;
     }
 
     private void StartLevel()
@@ -38,6 +40,12 @@ public class BoardGenerator : MonoBehaviour
         
         GenerateTypeDictionary(LevelContainer.GetCardTypes());
         GenerateGrid(LevelContainer.GetGridDimentions());
+    }
+    
+    private void StartLevel(List<CardData> levelCards)
+    {
+        LevelContainer = Core.Resources.GetLevel(Core.Data.CurrentLevel);
+        GenerateGrid(levelCards, LevelContainer.GetGridDimentions());
     }
 
     private void GenerateGrid(Vector2Int gridDimensions)
@@ -75,16 +83,43 @@ public class BoardGenerator : MonoBehaviour
                     continue;
 
                 Vector3 position = (Vector3)(new Vector2(x * gridSpacing.x, y * gridSpacing.y) - offset) * scale;
-                AddNewCard(position, Vector3.one * scale, $"Sprite_{x}_{y}");
+                AddNewCard(position, new Vector2Int(x, y), Vector3.one * scale, $"Sprite_{x}_{y}", GetRandomCardType());
             }
         }
     }
 
-    private void AddNewCard(Vector3 cardPosition, Vector3 cardScale, string cardName)
+    private void GenerateGrid(List<CardData> levelCards, Vector2Int gridDimensions)
+    {
+        Vector2 spriteSize = CardObject.GetSpriteSize();
+        
+        Vector2 gridSpacing = new Vector2
+        {
+            x = CardSpacing.x * spriteSize.x,
+            y = CardSpacing.y * spriteSize.y
+        };
+        
+        Vector2 gridSize = new Vector2
+        {
+            x = gridDimensions.x * gridSpacing.x,
+            y = gridDimensions.y * gridSpacing.y
+        };
+        Vector2 offset = (gridSize - gridSpacing) * 0.5f;
+        Vector3 screenSize = MainCamera.ScreenToWorldPoint(new Vector2(Screen.width, Screen.height)) * 2f;
+        float scale = Mathf.Min(screenSize.x / gridSize.x, screenSize.y / gridSize.y);
+        
+        foreach (var card in levelCards)
+        {
+            Vector3 position = (Vector3)(new Vector2(card.Pos.x * gridSpacing.x, card.Pos.y * gridSpacing.y) - offset) * scale;
+            
+            AddNewCard(position, card.Pos, Vector3.one * scale, $"Sprite_{card.Pos.x}_{card.Pos.y}", card.Type);
+        }
+    }
+
+    private void AddNewCard(Vector3 cardPosition, Vector2Int gridPosition, Vector3 cardScale, string cardName, CardType cardType)
     {
         CardController newCard = CardPool.Spawn(cardPosition, Quaternion.identity, cardScale);
-        
-        newCard.InitCard(GetRandomCardType(), CardPool.Despawn);
+
+        newCard.InitCard(cardType, gridPosition, CardPool.Despawn);
 
         newCard.name = cardName;
 

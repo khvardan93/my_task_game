@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 
 public class EventManager
 {
@@ -9,6 +10,7 @@ public class EventManager
     public Action<int> OnChangeLevel;
     
     public Action OnStartLevel;
+    public Action<List<CardData>> OnStartSavedLevel;
     
     public Action OnCombo;
 

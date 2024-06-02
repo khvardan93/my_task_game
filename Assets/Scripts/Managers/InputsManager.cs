@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 public class InputsManager : MonoBehaviour
@@ -22,6 +23,19 @@ public class InputsManager : MonoBehaviour
             {
                 Core.Events.OnClickCard?.Invoke(hit.collider.name);
             }
+        }
+    }
+
+    private void OnApplicationQuit()
+    {
+        Core.Game.SaveGame();
+    }
+
+    private void OnApplicationPause(bool pauseStatus)
+    {
+        if (pauseStatus)
+        {
+            Core.Game.SaveGame();
         }
     }
 }

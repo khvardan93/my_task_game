@@ -6,11 +6,9 @@ public class GameManager
 {
     private Dictionary<string, CardController> GameCards = new();
 
-    private int DestroyedCardCount = 0;
-    private int CardOpenCount = 0;
-
     private float ComboTimer;
-    private int ComboCount;
+
+    private ScoreData Score;
 
     public GameManager()
     {
@@ -25,15 +23,38 @@ public class GameManager
     public void StartLevel()
     {
         Core.Events.OnStartLevel?.Invoke();
+        Core.Data.DeleteSavedGame();
+
+        Score.DoneCombos = 0;
+        Score.DoneSteps = 0;
+        Score.DestroyedCards = 0;
+        Score.CardsCount = GameCards.Count;
+    }
+
+    public void StartSavedLevel()
+    {
+        if (Core.Data.TryGetSavedGame(out LevelData levelData))
+        {
+            Score = levelData.Score;
+            Core.Events.OnStartSavedLevel?.Invoke(levelData.Cards);
+            Core.Data.DeleteSavedGame();
+        }
+    }
+
+    public void SaveGame()
+    {
+        if(GameCards.Count == 0)
+            return;
+        
+        Core.Data.SaveGame(GameCards, Score);
     }
     
     private void ResetGame()
     {
         GameCards.Clear();
-        DestroyedCardCount = 0;
-        CardOpenCount = 0;
-        ComboCount = 0;
         ComboTimer = -1;
+
+        Score = new();
     }
 
     public void RegisterCard(string cardName, CardController card)
@@ -41,21 +62,11 @@ public class GameManager
         GameCards.Add(cardName, card);
     }
 
-    public void StartNextLevel()
-    {
-        StartLevel();
-    }
-
-    public void ReplayCurrentLevel()
-    {
-        StartLevel();
-    }
-
     private void OnClickCard(string cardName)
     {
         if (GameCards.TryGetValue(cardName, out CardController card) && card.TryOpenCard())
         {
-            CardOpenCount++;
+            Score.DoneSteps++;
             CheckMatches(card, cardName);
         }
     }
@@ -79,7 +90,7 @@ public class GameManager
                 card.DestroyCard();
                 item.Value.DestroyCard();
 
-                DestroyedCardCount += 2;
+                Score.DestroyedCards += 2;
                 Core.Events.OnMatch?.Invoke();
                 isThereAnyMatch = true;
                 CheckCombo();
@@ -91,7 +102,7 @@ public class GameManager
             Core.Events.OnMismatch?.Invoke();
         }
         
-        if (DestroyedCardCount == GameCards.Count)
+        if (Score.DestroyedCards == Score.CardsCount)
         {
             FinishLevel();
         }
@@ -116,7 +127,7 @@ public class GameManager
         else
         {
             ComboTimer = -1;
-            ComboCount++;
+            Score.DoneCombos++;
             
             Core.Events.OnCombo?.Invoke();
         }
@@ -124,7 +135,7 @@ public class GameManager
     
     private int GetLevelScore()
     {
-        return (int)(Mathf.Clamp(DestroyedCardCount / (float)CardOpenCount, 0.3f, 1) * 10) +
-               ComboCount * Configs.REWARD_PER_COMBO;
+        return (int)(Mathf.Clamp(Score.DestroyedCards / (float)Score.DoneSteps, 0.3f, 1) * 10) +
+               Score.DoneCombos * Configs.REWARD_PER_COMBO;
     }
 }

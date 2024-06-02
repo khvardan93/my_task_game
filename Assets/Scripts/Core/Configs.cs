@@ -14,6 +14,7 @@ public static class Configs
     #region DATA KEYS
     public const string SCORE_DATA_KEY = "score";
     public const string CURRENT_LEVEL_DATA_KEY = "current_level";
+    public const string SAVED_LEVEL_DATA = "saved_level";
     #endregion
 
     #region GAME SETTINGS

@@ -24,7 +24,7 @@ public class FinishLevelPopup : MonoBehaviour
 
     public void StartNextLevel()
     {
-        Core.Game.StartNextLevel();
+        Core.Game.StartLevel();
         HidePopup();
     }
 

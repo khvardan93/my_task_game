@@ -22,12 +22,20 @@ public class CardController : MonoBehaviour
         get;
     }
     
-    public void InitCard(CardType cardType, Action<CardController> onDestroyAction)
+    public Vector2Int CardPosition
+    {
+        private set;
+        get;
+    }
+    
+    public void InitCard(CardType cardType, Vector2Int gardPosition, Action<CardController> onDestroyAction)
     {
         gameObject.SetActive(true);
         
         OnDestroyAction = onDestroyAction;
-        
+        CardType = cardType;
+        CardPosition = gardPosition;
+
         CardRenderer = GetComponent<SpriteRenderer>();
         AudioSource = GetComponent<AudioSource>();
         CardSprite = Core.Resources.GetCardSprite(cardType).GetSprite();
@@ -35,7 +43,6 @@ public class CardController : MonoBehaviour
 
         CardRenderer.sprite = CardSprite;
 
-        CardType = cardType;
 
         CardState = CardState.Preview;
         

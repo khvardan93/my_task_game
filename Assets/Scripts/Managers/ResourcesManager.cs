@@ -21,4 +21,9 @@ public class ResourcesManager
     {
         return Resources.Load<LevelContainer>($"{Configs.LEVELS_PATH}/Level_{index}");
     }
+    
+    public bool IsLevelLeft()
+    {
+        return GetLevel(Core.Data.CurrentLevel) != null;
+    }
 }

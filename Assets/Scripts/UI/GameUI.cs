@@ -1,4 +1,5 @@
 using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class GameUI : MonoBehaviour
@@ -10,13 +11,21 @@ public class GameUI : MonoBehaviour
     [SerializeField] private StartLevelPopup StartLevelPopup;
     [SerializeField] private FinishLevelPopup FinishLevelPopup;
     [SerializeField] private ComboAlert ComboAlert;
+    [SerializeField] private GameObject NoLevelPopup;
     
     private void Awake()
     {
         OnScoreChange(Core.Data.Score);
         OnLevelChange(Core.Data.CurrentLevel);
-        
-        StartLevelPopup.ShowPopup();
+
+        if (Core.Resources.IsLevelLeft())
+        {
+            StartLevelPopup.ShowPopup();
+        }
+        else
+        {
+            NoLevelPopup.SetActive(true);
+        }
         
         Core.Events.OnChangeScore += OnScoreChange;
         Core.Events.OnChangeLevel += OnLevelChange;

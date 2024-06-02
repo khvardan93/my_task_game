@@ -287,7 +287,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3b8e5b120fc27994fb94d6af970beb80, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Parent: {fileID: 0}
+  Parent: {fileID: 148073973}
 --- !u!4 &148073973
 Transform:
   m_ObjectHideFlags: 0

@@ -22,23 +22,14 @@ public class CardPool
 
     public CardController Spawn(Vector3 position, Quaternion rotation, Vector3 scale)
     {
-        if (Pool.Count > 0)
-        {
-            CardController obj = Pool.Dequeue();
+        CardController obj = Pool.Count > 0 ? Pool.Dequeue() : Object.Instantiate(Prefab, position, rotation, Parent);
 
-            Transform objTransform = obj.transform;
-            
-            objTransform.position = position;
-            objTransform.rotation = rotation;
-            objTransform.localScale = scale;
-            
-            return obj;
-        }
-        else
-        {
-            CardController obj = Object.Instantiate(Prefab, position, rotation, Parent);
-            return obj;
-        }
+        Transform objTransform = obj.transform;
+        objTransform.position = position;
+        objTransform.rotation = rotation;
+        objTransform.localScale = scale;
+
+        return obj;
     }
 
     public void Despawn(CardController obj)

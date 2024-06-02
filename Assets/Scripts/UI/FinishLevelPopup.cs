@@ -9,7 +9,7 @@ public class FinishLevelPopup : MonoBehaviour
 
     public void ShowPopup(int score)
     {
-        TitleText.SetText($"Level {Core.Data.CurrentLevel + 1} is finished!");
+        TitleText.SetText($"Level {Core.Data.CurrentLevel} is finished!");
         RewardText.SetText($"Level score: {score}");
 
         gameObject.SetActive(true);

@@ -17,5 +17,6 @@ public static class Configs
 
     #region GAME SETTINGS
     public const float CARD_OPEN_DURATION = 1.0f;
+    public const float CARD_DESTROY_DURATION = 0.5f;
     #endregion
 }

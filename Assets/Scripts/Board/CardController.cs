@@ -7,7 +7,13 @@ public class CardController : MonoBehaviour
     private Sprite CardSprite;
     private Sprite BackSprite;
 
-    public bool IsOpen
+    public CardState CardState
+    {
+        private set;
+        get;
+    }
+
+    public CardType CardType
     {
         private set;
         get;
@@ -20,22 +26,38 @@ public class CardController : MonoBehaviour
         BackSprite = Core.Resources.GetCardBackSprite(cardType).GetSprite();
 
         CardRenderer.sprite = BackSprite;
+
+        CardType = cardType;
     }
 
-    public void OpenCard()
+    public bool TryOpenCard()
     {
-        if(IsOpen)
-            return;
+        if(CardState != CardState.Closed)
+            return false;
 
-        IsOpen = true;
+        CardState = CardState.Open;
         
         CardRenderer.sprite = CardSprite;
         Invoke(nameof(CloseCard), Configs.CARD_OPEN_DURATION);
+
+        return true;
     }
 
     private void CloseCard()
     {
-        IsOpen = false;
+        CardState = CardState.Closed;
         CardRenderer.sprite = BackSprite;
+    }
+
+    public void DestroyCard()
+    {
+        CardState = CardState.Destroyed;
+        CancelInvoke();
+        Invoke(nameof(DisableCard), Configs.CARD_DESTROY_DURATION);
+    }
+
+    private void DisableCard()
+    {
+        gameObject.SetActive(false);
     }
 }

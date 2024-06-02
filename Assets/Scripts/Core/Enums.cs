@@ -10,3 +10,10 @@ public enum CardType
     Sun,
     Leaf
 }
+
+public enum CardState
+{
+    Closed,
+    Open,
+    Destroyed
+}

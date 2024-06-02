@@ -5,9 +5,8 @@ using Random = UnityEngine.Random;
 
 public class BoardGenerator : MonoBehaviour
 {
-    [SerializeField] private LevelContainer LevelContainer;
-    [SerializeField] private Vector2 CardSpacing = new(1.0f, 1.0f);
-
+    private Vector2 CardSpacing = new(1.2f, 1.2f);
+    private LevelContainer LevelContainer;
     private CardPrefabContainer CardObject;
     private Transform Parent;
     private Camera MainCamera;
@@ -20,6 +19,18 @@ public class BoardGenerator : MonoBehaviour
         Parent = transform;
         MainCamera = Camera.main;
 
+        Core.Events.OnStartLevel += StartLevel;
+    }
+
+    private void OnDestroy()
+    {
+        Core.Events.OnStartLevel -= StartLevel;
+    }
+
+    private void StartLevel()
+    {
+        LevelContainer = Core.Resources.GetLevel(Core.Data.CurrentLevel);
+        
         GenerateTypeDictionary(LevelContainer.GetCardTypes());
         GenerateGrid(LevelContainer.GetGridDimentions());
     }
@@ -99,8 +110,8 @@ public class BoardGenerator : MonoBehaviour
 
     private void GenerateTypeDictionary(CardType[] types)
     {
-        Vector2Int dimenstions = LevelContainer.GetGridDimentions();
-        int cardCount = ((dimenstions.x * dimenstions.y) / 2) * 2;
+        Vector2Int dimensions = LevelContainer.GetGridDimentions();
+        int cardCount = ((dimensions.x * dimensions.y) / 2) * 2;
 
         while (cardCount > 0)
         {

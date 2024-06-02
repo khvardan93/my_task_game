@@ -20,6 +20,16 @@ public class GameManager
         GameCards.Add(cardName, card);
     }
 
+    public void StartNextLevel()
+    {
+        
+    }
+
+    public void ReplayCurrentLevel()
+    {
+        
+    }
+
     private void OnClickCard(string cardName)
     {
         if (GameCards.TryGetValue(cardName, out CardController card) && card.TryOpenCard())

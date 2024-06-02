@@ -16,4 +16,9 @@ public class ResourcesManager
     {
         return Resources.Load<CardSpriteContainer>(Configs.CARD_BACK_SPRITE_PATH);
     }
+
+    public LevelContainer GetLevel(int index)
+    {
+        return Resources.Load<LevelContainer>($"{Configs.Levels_PATH}/Level_{index}");
+    }
 }

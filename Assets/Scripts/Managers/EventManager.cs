@@ -7,4 +7,8 @@ public class EventManager
     public Action<int> OnChangeScore;
     
     public Action<int> OnChangeLevel;
+    
+    public Action OnStartLevel;
+
+    public Action<int> OnFinishLevel;
 }

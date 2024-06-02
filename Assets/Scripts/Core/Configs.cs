@@ -4,6 +4,7 @@ public static class Configs
     public const string CARD_PREFAB_PATH = "Prefabs/CardPrefab";
     public const string CARD_SPRITE_PATH = "Sprites/Cards";
     public const string CARD_BACK_SPRITE_PATH = "Sprites/CardBack";
+    public const string Levels_PATH = "Levels";
     #endregion
 
     #region LAYERS
@@ -18,6 +19,6 @@ public static class Configs
     #region GAME SETTINGS
     public const float CARD_OPEN_DURATION = 1.0f;
     public const float CARD_DESTROY_DURATION = 0.5f;
-    public const float CARD_PREVIEW_DURATION = 0.5f;
+    public const float CARD_PREVIEW_DURATION = 0.75f;
     #endregion
 }

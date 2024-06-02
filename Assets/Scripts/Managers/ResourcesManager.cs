@@ -19,6 +19,6 @@ public class ResourcesManager
 
     public LevelContainer GetLevel(int index)
     {
-        return Resources.Load<LevelContainer>($"{Configs.Levels_PATH}/Level_{index}");
+        return Resources.Load<LevelContainer>($"{Configs.LEVELS_PATH}/Level_{index}");
     }
 }

@@ -9,7 +9,8 @@ public class GameUI : MonoBehaviour
     [Header("Popups")] 
     [SerializeField] private StartLevelPopup StartLevelPopup;
     [SerializeField] private FinishLevelPopup FinishLevelPopup;
-
+    [SerializeField] private ComboAlert ComboAlert;
+    
     private void Awake()
     {
         OnScoreChange(Core.Data.Score);
@@ -21,6 +22,7 @@ public class GameUI : MonoBehaviour
         Core.Events.OnChangeLevel += OnLevelChange;
 
         Core.Events.OnFinishLevel += FinishLevelPopup.ShowPopup;
+        Core.Events.OnCombo += ComboAlert.ShowAlert;
     }
 
     private void OnDestroy()
@@ -29,6 +31,7 @@ public class GameUI : MonoBehaviour
         Core.Events.OnChangeLevel -= OnLevelChange;
         
         Core.Events.OnFinishLevel -= FinishLevelPopup.ShowPopup;
+        Core.Events.OnCombo -= ComboAlert.ShowAlert;
     }
 
     private void OnScoreChange(int score)

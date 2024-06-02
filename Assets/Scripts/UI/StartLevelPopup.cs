@@ -18,7 +18,7 @@ public class StartLevelPopup : MonoBehaviour
     
     public void OnStartLevel()
     {
-        Core.Events.OnStartLevel?.Invoke();
+        Core.Game.StartLevel();
         HidePopup();
     }
 }

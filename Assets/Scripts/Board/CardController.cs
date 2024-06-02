@@ -23,6 +23,8 @@ public class CardController : MonoBehaviour
     
     public void InitCard(CardType cardType, Action<CardController> onDestroyAction)
     {
+        gameObject.SetActive(true);
+        
         OnDestroyAction = onDestroyAction;
         
         CardRenderer = GetComponent<SpriteRenderer>();
@@ -34,6 +36,7 @@ public class CardController : MonoBehaviour
         CardType = cardType;
 
         CardState = CardState.Preview;
+        
         Invoke(nameof(CloseCard), Configs.CARD_PREVIEW_DURATION);
     }
 

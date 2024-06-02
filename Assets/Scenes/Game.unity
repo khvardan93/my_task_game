@@ -152,7 +152,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3b8e5b120fc27994fb94d6af970beb80, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  GridDimentions: {x: 4, y: 4}
+  LevelContainer: {fileID: 11400000, guid: 989ad46bbf30c0e4b8b50c58bba1e4db, type: 2}
   CardSpacing: {x: 1.5, y: 1.5}
 --- !u!4 &148073973
 Transform:

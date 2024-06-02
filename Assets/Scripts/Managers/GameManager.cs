@@ -22,12 +22,9 @@ public class GameManager
 
     private void OnClickCard(string cardName)
     {
-        if (GameCards.TryGetValue(cardName, out CardController card))
+        if (GameCards.TryGetValue(cardName, out CardController card) && card.TryOpenCard())
         {
-            if (card.TryOpenCard())
-            {
-                CheckMatches(card, cardName);
-            }
+            CheckMatches(card, cardName);
         }
     }
 

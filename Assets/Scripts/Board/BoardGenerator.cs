@@ -1,25 +1,30 @@
+using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
 public class BoardGenerator : MonoBehaviour
 {
-    [SerializeField] private Vector2Int GridDimentions = new (5, 5);
-    [SerializeField] private Vector2 CardSpacing = new (1.0f, 1.0f);
+    [SerializeField] private LevelContainer LevelContainer;
+    [SerializeField] private Vector2 CardSpacing = new(1.0f, 1.0f);
 
     private CardPrefabContainer CardObject;
     private Transform Parent;
     private Camera MainCamera;
+
+    private Dictionary<CardType, int> TypeList = new();
 
     private void Start()
     {
         CardObject = Core.Resources.GetCardPrefab();
         Parent = transform;
         MainCamera = Camera.main;
-        
-        GenerateGrid();
+
+        GenerateTypeDictionary(LevelContainer.GetCardTypes());
+        GenerateGrid(LevelContainer.GetGridDimentions());
     }
 
-    private void GenerateGrid()
+    private void GenerateGrid(Vector2Int gridDimensions)
     {
         Vector2 spriteSize = CardObject.GetSpriteSize();
         Vector2 gridSpacing = new Vector2
@@ -30,19 +35,29 @@ public class BoardGenerator : MonoBehaviour
 
         Vector2 gridSize = new Vector2
         {
-            x = GridDimentions.x * gridSpacing.x,
-            y = GridDimentions.y * gridSpacing.y
+            x = gridDimensions.x * gridSpacing.x,
+            y = gridDimensions.y * gridSpacing.y
         };
 
         Vector2 offset = (gridSize - gridSpacing) * 0.5f;
         Vector3 screenSize = MainCamera.ScreenToWorldPoint(new Vector2(Screen.width, Screen.height)) * 2f;
 
         float scale = Mathf.Min(screenSize.x / gridSize.x, screenSize.y / gridSize.y);
-        
-        for (int y = 0; y < GridDimentions.y; y++)
+
+        Vector2Int passiveCardIndex = -Vector2Int.one;
+
+        if (gridDimensions.x * gridDimensions.y % 2 == 1)
         {
-            for (int x = 0; x < GridDimentions.x; x++)
+            passiveCardIndex = (gridDimensions - Vector2Int.one) / 2;
+        }
+
+        for (int y = 0; y < gridDimensions.y; y++)
+        {
+            for (int x = 0; x < gridDimensions.x; x++)
             {
+                if (passiveCardIndex.x == x && passiveCardIndex.y == y)
+                    continue;
+
                 Vector3 position = (Vector3)(new Vector2(x * gridSpacing.x, y * gridSpacing.y) - offset) * scale;
                 AddNewCard(position, Vector3.one * scale, $"Sprite_{x}_{y}");
             }
@@ -52,11 +67,58 @@ public class BoardGenerator : MonoBehaviour
     private void AddNewCard(Vector3 cardPosition, Vector3 cardScale, string cardName)
     {
         CardController newCard = Instantiate(CardObject.GetCard(), cardPosition, Quaternion.identity, Parent);
-        newCard.InitCard((CardType)Random.Range(0, 9));
-        newCard.transform.localScale = cardScale;
-                
-        newCard.name = cardName;
+
+        CardType randomType = GetRandomCardType();
         
+        newCard.InitCard(randomType);
+        newCard.transform.localScale = cardScale;
+
+        newCard.name = cardName;
+
         Core.Game.RegisterCard(cardName, newCard);
+    }
+
+    private void RemoveFromList(CardType type)
+    {
+        if (!TypeList.ContainsKey(type))
+            return;
+        TypeList[type]--;
+
+        if (TypeList[type] == 0)
+            TypeList.Remove(type);
+    }
+
+    private CardType GetRandomCardType()
+    {
+        CardType randomType = TypeList.Keys.ToList()[Random.Range(0, TypeList.Count)];
+
+        RemoveFromList(randomType);
+        
+        return randomType;
+    }
+
+    private void GenerateTypeDictionary(CardType[] types)
+    {
+        Vector2Int dimenstions = LevelContainer.GetGridDimentions();
+        int cardCount = ((dimenstions.x * dimenstions.y) / 2) * 2;
+
+        while (cardCount > 0)
+        {
+            foreach (CardType type in types)
+            {
+                if (TypeList.ContainsKey(type))
+                {
+                    TypeList[type] += 2;
+                }
+                else
+                {
+                    TypeList.Add(type, 2);
+                }
+
+                cardCount -= 2;
+                if (cardCount == 0)
+                    return;
+            }
+        }
     }
 }
